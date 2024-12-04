@@ -17,3 +17,5 @@ previous one, I can easily retrieve it.
     - `CHANNELID`: The ID of the channel where updates will be posted.
 3. Install dependencies: `pip install -r requirements.txt`.
 4. Run the bot and it will track avatar changes.
+### OR
+Build the Dockerfile
