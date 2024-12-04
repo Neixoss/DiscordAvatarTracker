@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from discord import Client, Intents, User
+import discord
 from datetime import datetime
 # Load environment variables
 load_dotenv()
@@ -31,12 +32,13 @@ class DiscordBot(Client):
             print(f"Server name: {self.get_channel(int(CHANNELID)).guild.name}") # Print the server name
     async def on_user_update(self, before: User, after: User):
         if before.id == int(USERID) and before.avatar != after.avatar: # Check if the user id didn't change and if the avatar changed
-            timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S") # European time
+            timestamp = discord.utils.utcnow().timestamp() # Discord time 
+            formatted_timestamp = f"<t:{int(timestamp)}:F>"
             channel = self.get_channel(int(CHANNELID)) # store the channel inside a "channel" var
             # If the channel is found, send a message to the channel with the timestamp and the avatar URL
             if channel:
                 await channel.send(
-                    f"**[{timestamp}]** - User({after.name}) profile picture changed!\n"
+                    f"**[{formatted_timestamp}]** - User({after.name}) profile picture changed!\n"
                     f"{after.avatar.url}"
                 )
             else:
