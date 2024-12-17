@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from discord import Client, Intents, User
 import discord
 from datetime import datetime
+import aiohttp
+import tempfile
 # Load environment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN') # Discord bot token, from the .env file
@@ -37,10 +39,21 @@ class DiscordBot(Client):
             channel = self.get_channel(int(CHANNELID)) # store the channel inside a "channel" var
             # If the channel is found, send a message to the channel with the timestamp and the avatar URL
             if channel:
-                await channel.send(
-                    f"**[{formatted_timestamp}]** - User({after.name}) profile picture changed!\n"
-                    f"{after.avatar.url}"
-                )
+                try:
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(after.avatar.url) as resp:
+                            if resp.status == 200:
+                                # Make a temp file 
+                                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
+                                    temp_file.write(await resp.read())
+                                    temp_filename = temp_file.name  # Save the path
+
+                    await channel.send(
+                    f"**[{formatted_timestamp}]** - User({after.name}) profile picture changed!\n",)
+                    await channel.send(file=discord.File(temp_filename))
+                    os.unlink(temp_filename)
+                except Exception as e:
+                    print(f"Error while uploading : {e}")
             else:
                 print("Channel not found") # If the channel couldn't be found
             self.last_avatar_url = after.avatar.url # Store the last know avatar URL for comparison
