@@ -1,7 +1,7 @@
 # DiscordAvatarTracker
 A Discord bot that tracks avatar changes and sends a message when the user changes their avatar.
 
-This bot is a personal project I did to learn discord.py. The main goal was to build a bot that monitors changes to my 
+This bot is a personal project I did to learn discord.py and how to use git/github. The main goal was to build a bot that monitors changes to my 
 avatar and stores the updated avatar in a channel. This way, if I lose the original image or want to revert to a 
 previous one, I can easily retrieve it.
 ## Key Features:
